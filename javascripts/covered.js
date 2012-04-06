@@ -1,74 +1,50 @@
 $.extend({
   constructDoc: function(d,facets){
-    var node = $('<div />').attr({class: 'doc ' + d.data_source, id: 'doc-' + d.id}), nodeContent = '';
+    var $node = $('<div />').attr({class: 'doc ' + d.data_source, id: 'doc-' + d.id}), nodeContent = '';
     nodeContent += (d.id_isbn)? '<img src="http://covers.openlibrary.org/b/isbn/' + d.id_isbn[0] + '-S.jpg" class="cover" />' : '';
     if(d.content_link){nodeContent += '<a target="_blank" href="' + d.content_link[0] + '">';}
     nodeContent += (d.title) ? $.ellipsisSubstr(d.title) : 'Untitled Work';
     if(d.content_link){nodeContent += '</a>';}
     nodeContent += '<span class="data_source">' + d.data_source + '</span>';
     facets[d.data_source] = (facets[d.data_source] == undefined) ? 1 : (facets[d.data_source] + 1);
-    return node.append(nodeContent).data('doc',d);
+    return $node.append(nodeContent).data('doc',d);
   	},
 
 	ellipsisSubstr: function(inString){
-		var max = arguments[1] || 100, suffix = arguments[2] || '…'; 
-		if(inString.length >= max){
-			return inString.substr(0,max) + suffix;
-			}
-		else{return inString;}
+		var max = arguments[1] || 100, suffix = arguments[2] || '…';
+		return (inString.length >= max) ? inString.substr(0,max) + suffix : inString;
 		}
 	});
 
 $.fn.extend({
-	xISBNjacketsLT: function(){
-		return this.each(function(){
-			$this = $(this);
-			if($this.data('doc').id_isbn && !$this.data('retrievedLT')){
-				$.getJSON('http://xisbn.worldcat.org/webservices/xid/isbn/' + $this.data('doc').id_isbn + '?method=getEditionsa&format=json&fl=*&callback=?')
-					.done(function(data){
-						if(data.list){
-							var output = '<br /><strong><a target="_blank" href="http://www.librarything.com/isbn/' + isbn + '">LibraryThing</a> Jackets</strong>:<br />';
-							$.each(data.list,function(i,record){
-								if(i <= 10){
-									output += '<img src="http://covers.librarything.com/devkey/67af2723f6491710c32b6d9b27bcaa0d/small/isbn/' + record.isbn[0] + '" alt="" />';
-									}
-								});
-							$this.append(output)
-							}
-						});
-				$this.data('retrievedLT',true);		
-				}
-		$this.find("img").each(function(){
-			if(this.width == 1){
-				$(this).remove();
-				}
-			});
-		$('.isotope').isotope('reLayout');
-		});
-		},
+	xISBNjacketsLT: function(){return this.each(function(){$this = $(this);
+		if($this.data('doc').id_isbn && !$this.data('retrievedLT')){
+			$.getJSON('http://xisbn.worldcat.org/webservices/xid/isbn/' + $this.data('doc').id_isbn + '?method=getEditionsa&format=json&fl=*&callback=?')
+				.done(function(data){if(data.list){
+					var output = '<br /><strong><a target="_blank" href="http://www.librarything.com/isbn/' + $this.data('doc').id_isbn + '">LibraryThing</a> Jackets</strong>:<br />';
+					$.each(data.list,function(i,record){if(i <= 10){
+						output += '<img src="http://covers.librarything.com/devkey/67af2723f6491710c32b6d9b27bcaa0d/small/isbn/' + record.isbn[0] + '" alt="" />';
+						}});
+					$this.append(output);
+					}});
+			$this.data('retrievedLT',true);
+			}
+		});},
 	
-	subjectFlickr: function(doc,subject){
-		return this.each(function(){
-			$this = $(this);
-			if($this.data('doc').subject && !$this.data('retrievedFlickr')){
-				var subject = $.trim($this.data('doc').subject[0].split(',')[0]), term = encodeURIComponent(subject);
-				$.getJSON('http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=ea0707dc3f4b4b3346806560845986c9&license=1,2,3,4,5,6,7&sort=relevance&format=json&text=' + term + '&jsoncallback=?')
-					.done(function(data){
-						if(data.photos.photo){
-							var output = '<br /><strong><a target="_blank" href="http://www.flickr.com/search/?l=deriv&q=' + term + '">Flickr results</a> for "' + subject + '"</strong>:<br />';
-							$.each(data.photos.photo,function(i,photo){
-								if(i <= 2){
-									output += '<a href="http://www.flickr.com/photos/' + photo.owner + '/' + photo.id + '/"><img src="http://farm' + photo.farm + '.staticflickr.com/' + photo.server + '/' + photo.id + '_' + photo.secret + '_s.jpg" alt="" height="75" width="75" /></a>';
-									}
-								});
-							$this.append(output);
-							$('.isotope').isotope('reLayout');
-							}
-						});
+	subjectFlickr: function(doc,subject){return this.each(function(){$this = $(this);
+		if($this.data('doc').subject && !$this.data('retrievedFlickr')){
+			var subject = $.trim($this.data('doc').subject[0].split(',')[0]), term = encodeURIComponent(subject);
+			$.getJSON('http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=ea0707dc3f4b4b3346806560845986c9&license=1,2,3,4,5,6,7&sort=relevance&format=json&text=' + term + '&jsoncallback=?')
+				.done(function(data){if(data.photos.photo){
+					var output = '<br /><strong><a target="_blank" href="http://www.flickr.com/search/?l=deriv&q=' + term + '">Flickr results</a> for "' + subject + '"</strong>:<br />';
+					$.each(data.photos.photo,function(i,photo){if(i <= 2){
+						output += '<a href="http://www.flickr.com/photos/' + photo.owner + '/' + photo.id + '/"><img src="http://farm' + photo.farm + '.staticflickr.com/' + photo.server + '/' + photo.id + '_' + photo.secret + '_s.jpg" alt="" height="75" width="75" /></a>';
+						}});
+					$this.append(output);
+					}});
 					$this.data('retrievedFlickr',true);
 					}
-			});
-		}
+		});}
 	});
 
 $(document).ready(function(){
@@ -156,6 +132,11 @@ $(document).ready(function(){
   
   /* Make AJAX calls to services when a result is clicked */
 	$target.on('click','.doc',function(){
-		$(this).xISBNjacketsLT().subjectFlickr();
+		$(this).xISBNjacketsLT().subjectFlickr().delay(2500).queue(function(){
+			$('.isotope').isotope('reLayout');
+			$this.find("img").each(function(){if(this.width == 1){
+				$(this).remove();
+				}});
+			});
 		});
 });
