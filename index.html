@@ -1,34 +1,49 @@
 <!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Covered</title>
-    <link href="stylesheets/isotope.css" media="screen" rel="stylesheet" type="text/css" />
-    <link href="stylesheets/covered.css" media="screen" rel="stylesheet" type="text/css" />
-    <script src="javascripts/jquery.min.js"></script>
-    <script src="javascripts/jquery.isotope.min.js"></script>
-    <script src="javascripts/covered.js"></script>
-  </head>
-  <body>
-    <header>
-      <fieldset>
-        <legend>Covered</legend>
-        <form id="query">
-          <input id="start" name="start" type="hidden" value="0" />
-          <input id="term" name="term" type="text" size="30" placeholder="please enter a query term . . ."/>
-          <span id="searchables"></span><span id="add_searchable"> + Add Term</span>
-          <input type="submit" id="submit" value="go!" /><br/>
-          <div id="terms"></div>
-          <div id="meta"></div>
-        </form>
-      </fieldset>
-      <div id="messages"></div>
-      <div id="facets">
-      </div>
-    </header>
-
-    <div id="target">
-    </div>
-
-  </body>
-</html>
+<html><head>
+	<meta charset="utf-8">
+  <title>Covered</title>
+  <link href="stylesheets/isotope.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="stylesheets/covered.css" media="screen" rel="stylesheet" type="text/css" />
+  <script src="javascripts/jquery.min.js"></script>
+  <script src="javascripts/jquery.isotope.min.js"></script>
+  <script src="javascripts/covered.js"></script>
+</head><body>
+	<header>
+		<form id="query" method="get" action="http://api.dp.la/dev/item/"><fieldset><legend>Covered</legend>
+			<input id="start" name="start" type="hidden" value="0" />
+			<input autofocus id="term" name="term" type="text" size="30" placeholder="please enter a query term…"/>
+			<select id="searchable_select"><option value="keyword">All fields</option>
+				<option value="title">Title</option>
+				<option value="title_keyword">Title, keyword</option>
+				<option value="creator">Creator</option>
+				<option value="creator_keyword">Creator, keyword</option>
+				<option value="date">Date</option>
+				<option value="description">Description</option>
+				<option value="description_keyword">Description, keyword</option>
+				<option value="subject">Subject</option>
+				<option value="subject_keyword">Subject, keyword</option>
+				<option value="publisher">Publisher</option>
+				<option value="language">Language</option>
+				<option value="id_isbn">ISBN</option>
+				<option value="id_oclc">OCLC</option>
+				<option value="id_lccn">LCCN</option>
+				<option value="id_inst">Partner Id</option>
+				<option value="call_num">Call Number</option>
+				<option value="height">Height</option>
+				<option value="page_count">Page Count</option>
+				<option value="relation">Relation</option>
+				<option value="content_link">Context Link</option>
+				<option value="rights">Rights</option>
+				<option value="data_source">Data Source</option>
+				<option value="resource_type">Resource Type</option>
+			</select>
+			 <span id="add_searchable">+ Add Term</span>
+			<input type="submit" id="submit" value="go!" /><br/>
+			<div id="terms"></div>
+			<div id="meta"></div>
+		</fieldset></form>
+		<div id="messages"></div>
+		<div id="facets"></div>
+	</header>
+	<div id="target"></div>
+</body></html>
