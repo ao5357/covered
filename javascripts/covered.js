@@ -34,7 +34,7 @@ $.fn.extend({
 	subjectFlickr: function(doc,subject){return this.each(function(){$this = $(this);
 		if($this.data('doc').subject && !$this.data('retrievedFlickr')){
 			var subject = $.trim($this.data('doc').subject[0].split(',')[0]), term = encodeURIComponent(subject);
-			$.getJSON('http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=3ed442008a91d93ec521ce9b8a789856c9&license=1,2,3,4,5,6,7&sort=relevance&format=json&text=' + term + '&jsoncallback=?')
+			$.getJSON('http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=3ed442008a91d93ec521ce9b8a789856&license=1,2,3,4,5,6,7&sort=relevance&format=json&text=' + term + '&jsoncallback=?')
 				.done(function(data){if(data.photos.photo){
 					var output = '<br /><strong><a target="_blank" href="http://www.flickr.com/search/?l=deriv&q=' + term + '">Flickr results</a> for "' + subject + '"</strong>:<br />';
 					$.each(data.photos.photo,function(i,photo){if(i <= 2){
