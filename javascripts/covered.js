@@ -1,6 +1,6 @@
 $.extend({
 	constructDoc: function(d,facets){
-		var $node = $('<div />').attr({class: 'doc ' + d.data_source, id: 'doc-' + d.id});
+		var $node = $('<div class="doc ' + d.data_source + '" id="doc-' + d.id + '"></div>');
 		var nodeContent = '';
 		nodeContent += (d.id_isbn)? '<img src="http://covers.openlibrary.org/b/isbn/' + d.id_isbn[0] + '-S.jpg" class="cover" />' : '';
 		if(d.content_link){nodeContent += '<a target="_blank" href="' + d.content_link[0] + '">';}
