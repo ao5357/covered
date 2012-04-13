@@ -78,15 +78,16 @@ $(document).ready(function(){
 
 	/* Limit results to the facets */
 	$("#facets").on('click','.filter',function(){
-	$target.isotope({filter: $(this).attr('data_filter_class')});
-	});
+		// $target.isotope({filter: $(this).attr('data_filter_class')});
+		// TODO: Replace isotope functionality with something more IE-friendly
+		});
 
 	/* When form is submitted, get results */
 	$form.on('submit',function(){
 		$form.find("#add_searchable").click();
 		$form.find('#submit').val('please wait…');
 		$form.find('#meta').empty();
-		$target.empty().isotope('destroy');
+		$target.empty();
 		$('#messages').empty();
 		$('#facets').empty();
 
@@ -102,12 +103,11 @@ $(document).ready(function(){
 
 	$.getJSON('http://api.dp.la/dev/item?' + $.param(query) + '&callback=?')
 		.done(function(data){
-			$target.isotope({columnWidth: 300,itemSelector : '.doc',layoutMode : 'masonry'});
 			var facets = {};
 		if(data.docs){
 			var start = +data.start, limit = +data.limit, num_found = +data.num_found, metaMsg = '';
 			$.each(data.docs,function(i,record){
-					$target.isotope('insert',$.constructDoc(record,facets));
+					$target.append($.constructDoc(record,facets));
 					});
 				$.each(facets,function(key,val){
 		  	$('#facets').append('<span class="filter" data_filter_class=".' + key + '">' + key + ' - ' + val + '</span>');
@@ -134,7 +134,6 @@ $(document).ready(function(){
 	/* Make AJAX calls to services when a result is clicked */
 	$target.on('click','.doc',function(){
 		$(this).xISBNjacketsLT().subjectFlickr().delay(2500).queue(function(){
-			$('.isotope').isotope('reLayout');
 			$this.find("img").each(function(){if(this.width == 1){
 				$(this).remove();
 				}});
